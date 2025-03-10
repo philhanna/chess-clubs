@@ -1,20 +1,18 @@
+import os
 import pytest
 from unittest.mock import patch, MagicMock
 from bs4 import BeautifulSoup
 import requests
 from chess_clubs.club import Club
+from testdata import TESTDATA
 
 @pytest.fixture
 def sample_html():
     """Returns a sample HTML response with at least 3 tables."""
-    return """
-    <html><body>
-        <table id="first"></table>
-        <table id="second"></table>
-        <table id="third"> <tr><td>Data</td></tr> </table>
-        <table id="fourth"></table>
-    </body></html>
-    """
+    testfile = os.path.join(TESTDATA, "main_table.html")
+    with open(testfile) as fp:
+        html = fp.read()
+    return html
 
 @pytest.fixture
 def insufficient_tables_html():

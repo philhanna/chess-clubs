@@ -15,9 +15,6 @@ class Club:
         if len(tables) < 3:
             raise ValueError(f"Expected at least 3 tables, found {len(tables)}")
         table = tables[2]   # Get the 3rd table
-        with open("/tmp/debug.html", "w") as fp:
-            print(table.prettify(), file=fp)
-        
     
     @staticmethod
     def get(url: str) -> str:
