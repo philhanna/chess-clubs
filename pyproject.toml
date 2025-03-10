@@ -1,2 +1,25 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chess-clubs"
+version = "0.1.0"
+authors = [
+    {name = "Phil Hanna", email = "ph1204@gmail.com"}
+]
+description = "Chess clubs"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "requests",
+    "numpy",
+    "bs4"
+]
+
+[tool.setuptools]
+packages = ["chess_clubs"]
+
 [tool.pytest.ini_options]
 pythonpath = ["src", "chess_clubs"]
+
