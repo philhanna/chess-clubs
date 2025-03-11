@@ -19,17 +19,19 @@ class Club:
         self.id: str = id
         self.name: str = name
 
-    def load(self):
-        """Fetches and processes the club's details from the US Chess Federation website.
+    def get_club_name(self, table) -> str:
+        tag = table.find("font", {"size": "+1"})
+        if not tag:
+            errmsg = "No <font size=+1> tag found"
+            raise ValueError(errmsg)
         
-        Retrieves the webpage corresponding to the club's ID, parses the HTML content,
-        and extracts relevant information from the third table on the page.
-        """
-        url = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
-        html = Club.get(url)
-        soup = BeautifulSoup(html, 'html.parser')
-        table = self.get_3rd_table(soup)
+        text = tag.get_text(strip=True)
+        id_part, name_part = text.split(":", 1)
+        id_part = id_part.strip()
 
+        name_part = name_part.strip()
+        return name_part
+    
     def get_3rd_table(self, soup) -> element.Tag:
         """
         Extracts and returns the third HTML table from the parsed webpage.
@@ -50,6 +52,22 @@ class Club:
         table = tables[2]   # Get the 3rd table
         return table
 
+    def load(self):
+        """Fetches and processes the club's details from the US Chess Federation website.
+        
+        Retrieves the webpage corresponding to the club's ID, parses the HTML content,
+        and extracts relevant information from the third table on the page.
+        """
+        url = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
+        html = Club.get(url)
+        soup = BeautifulSoup(html, 'html.parser')
+        table3 = self.get_3rd_table(soup)
+        self.name = self.get_club_name(table3)
+
+    # ------------------------------------------------------------------
+    # Static methods
+    # ------------------------------------------------------------------
+    
     @staticmethod
     def get(url: str) -> str:
         """

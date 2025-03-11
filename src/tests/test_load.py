@@ -9,7 +9,7 @@ from testdata import TESTDATA
 @pytest.fixture
 def sample_html():
     """Returns a sample HTML response with at least 3 tables."""
-    testfile = os.path.join(TESTDATA, "main_table.html")
+    testfile = os.path.join(TESTDATA, "main.html")
     with open(testfile) as fp:
         html = fp.read()
     return html
@@ -28,7 +28,7 @@ def insufficient_tables_html():
 def test_load_success(mock_get, sample_html):
     """Test that the load method works when at least 3 tables exist."""
     mock_get.return_value = sample_html
-    club = Club(id="1234")
+    club = Club(id="A6021250")
 
     # No exception should be raised
     club.load()
