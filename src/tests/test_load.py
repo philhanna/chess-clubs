@@ -80,6 +80,7 @@ def test_load_success(mock_get_page):
 
     # No exception should be raised
     club.load()
+    _ = str(club)
 
     assert club.id == "A6021250"
     assert club.name == "HIGHWAY 264 CHESS PROMOTIONS"
