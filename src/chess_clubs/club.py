@@ -32,6 +32,8 @@ class Club:
     def get_active_player_list_url(self, table) -> str:
         link = table.find('a', string="Active Player List")
         url = link.get("href")
+        url += "&min=6"
+        url += "&Search=Submit"
         return url
     
     def get_club_name(self, table) -> str:

@@ -36,7 +36,7 @@ def test_load_success(mock_get, sample_html):
     
     assert club.id == "A6021250"
     assert club.name == "HIGHWAY 264 CHESS PROMOTIONS"
-    assert club.url == "https://www.uschess.org/datapage/top-affil-players.php?affil=A6021250"
+    assert club.url == "https://www.uschess.org/datapage/top-affil-players.php?affil=A6021250&min=6&Search=Submit"
 
 @patch.object(Club, 'get')
 def test_load_fails_with_few_tables(mock_get, insufficient_tables_html):
