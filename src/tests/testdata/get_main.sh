@@ -1,2 +1,4 @@
 #! /bin/bash
-curl -o main.html "https://www.uschess.org/msa/AffDtlMain.php?A6021250"
+base=A6021250_main
+url=$(<${base}.url)
+curl -o ${base}.html $url

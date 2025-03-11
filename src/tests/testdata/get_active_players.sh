@@ -1,5 +1,4 @@
 # /usr/bin/bash
-#
-# Get players with at least 6 games in the club
-url=$(<A6021250.url)
-curl -o A6021250.html $url
+base=A6021250_active_players
+url=$(<${base}.url)
+curl -o ${base}.html $url

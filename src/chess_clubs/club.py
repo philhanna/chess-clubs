@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup, element
+import chess_clubs
 
 
 class Club:
@@ -90,31 +91,8 @@ class Club:
         and extracts relevant information from the third table on the page.
         """
         url = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
-        html = Club.get(url)
+        html = chess_clubs.get_page(url)
         soup = BeautifulSoup(html, 'html.parser')
         table3 = self.get_3rd_table(soup)
         self.name = self.get_club_name(table3)
         self.url = self.get_active_player_list_url(table3)
-
-    # ------------------------------------------------------------------
-    # Static methods
-    # ------------------------------------------------------------------
-
-    @staticmethod
-    def get(url: str) -> str:
-        """
-        Fetches the HTML content of a webpage from a given URL.
-
-        Args:
-            url (str): The URL to retrieve.
-
-        Returns:
-            str: The HTML content of the fetched webpage.
-
-        Raises:
-            requests.exceptions.RequestException: If the request encounters an HTTP error or timeout.
-        """
-        response = requests.get(
-            url, timeout=20)  # Set a timeout to avoid hanging requests
-        response.raise_for_status()  # Raise an error for HTTP error responses (4xx, 5xx)
-        return response.text
