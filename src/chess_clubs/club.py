@@ -8,7 +8,7 @@ class Club:
     This class allows fetching and parsing club details from the USCF website.
     """
 
-    def __init__(self, id: str, name: str = None):
+    def __init__(self, id: str):
         """
         Initializes a Club instance.
 
@@ -17,7 +17,8 @@ class Club:
             name (str, optional): The name of the club. Defaults to None.
         """
         self.id: str = id
-        self.name: str = name
+        self.name: str = None
+        self.players_url: str = None
 
     def get_club_name(self, table) -> str:
         tag = table.find("font", {"size": "+1"})
