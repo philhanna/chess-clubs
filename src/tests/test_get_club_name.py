@@ -1,5 +1,6 @@
 import pytest
 from bs4 import BeautifulSoup
+from chess_clubs import get_club_name
 from chess_clubs.club import Club
 
 @pytest.fixture
@@ -21,7 +22,7 @@ def test_get_club_name_valid(club):
     soup = BeautifulSoup(html, 'html.parser')
     table = soup.find("table")
     
-    assert club.get_club_name(table) == "HIGHWAY 264 CHESS PROMOTIONS"
+    assert get_club_name(table) == "HIGHWAY 264 CHESS PROMOTIONS"
 
 def test_get_club_name_missing_font_tag(club):
     """Test that the method raises a ValueError when the font tag is missing."""
@@ -30,7 +31,7 @@ def test_get_club_name_missing_font_tag(club):
     table = soup.find("table")
 
     with pytest.raises(ValueError, match="No <font size=\\+1> tag found"):
-        club.get_club_name(table)
+        get_club_name(table)
 
 def test_get_club_name_invalid_format(club):
     """Test that the method raises an error if the font tag doesn't contain ':'."""
@@ -43,7 +44,7 @@ def test_get_club_name_invalid_format(club):
     table = soup.find("table")
 
     with pytest.raises(ValueError):  # Expect a ValueError due to missing ':'
-        club.get_club_name(table)
+        get_club_name(table)
 
 def test_get_club_name_extra_spaces(club):
     """Test that extra spaces are stripped correctly."""
@@ -55,7 +56,7 @@ def test_get_club_name_extra_spaces(club):
     soup = BeautifulSoup(html, 'html.parser')
     table = soup.find("table")
 
-    assert club.get_club_name(table) == "HIGHWAY 264 CHESS PROMOTIONS"
+    assert get_club_name(table) == "HIGHWAY 264 CHESS PROMOTIONS"
 
 def test_get_club_name_multiple_font_tags(club):
     """Test that the method correctly picks the first matching font tag."""
@@ -68,4 +69,4 @@ def test_get_club_name_multiple_font_tags(club):
     soup = BeautifulSoup(html, 'html.parser')
     table = soup.find("table")
 
-    assert club.get_club_name(table) == "FIRST CLUB NAME"
+    assert get_club_name(table) == "FIRST CLUB NAME"
