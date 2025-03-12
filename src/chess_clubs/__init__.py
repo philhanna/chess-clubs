@@ -84,9 +84,9 @@ def format_name(name: str) -> str:
         return name  # If not, return the name as-is
 
     # First and last name determination
-    first_name = parts[0]
-    # Everything else is considered the last name
-    last_name = " ".join(parts[1:])
+    last_name = parts.pop()
+    # Everything else is considered the first name
+    first_name = " ".join(parts)
 
     # Reattach suffix if present
     if suffix:

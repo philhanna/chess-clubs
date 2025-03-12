@@ -3,9 +3,9 @@ import pytest
 from chess_clubs import format_name
 
 @pytest.mark.parametrize("input_name, expected_output", [
-    #("john mcconnell", "McConnell, John"),
-    #("sean O'brien", "O'Brien, Sean"),
-    #("michael jordan Jr.", "Jordan Jr, Michael"),
+    ("john mcconnell", "McConnell, John"),
+    ("sean O'brien", "O'Brien, Sean"),
+    ("michael jordan Jr.", "Jordan Jr, Michael"),
     ("robert james Smith III", "Smith III, Robert James"),
     ("MCdonald, alex", "McDonald, Alex"),
     ("O'neal, shaquille", "O'Neal, Shaquille"),
