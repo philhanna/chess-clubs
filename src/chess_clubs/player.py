@@ -1,5 +1,5 @@
 import re
-
+from name_formatter import format_name
 
 class Player:
     """ A player in this club """
@@ -18,4 +18,7 @@ class Player:
         return self._name
     
     def __str__(self) -> str:
-        return f"{self.id}:{self.name}"
+        formatter = format_name(self.name)
+        name = str(formatter)
+        
+        return f"{self.id}:{name}"
