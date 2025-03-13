@@ -1,4 +1,3 @@
-import re
 from name_formatter import format_name
 
 class Player:
