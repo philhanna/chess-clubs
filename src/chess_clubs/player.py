@@ -1,11 +1,14 @@
-from name_formatter import format_name
+from name_formatter import FormattedName
+
 
 class Player:
     """ A player in this club """
+
     def __init__(self, id: str, name: str):
         self._id: str = id
-        self._name: str = name
-        
+        formatter = FormattedName(name)
+        self._name: str = str(formatter)
+
     @property
     def id(self) -> str:
         """Returns the unique identifier of the player."""
@@ -15,9 +18,6 @@ class Player:
     def name(self) -> str:
         """Returns the name of the player."""
         return self._name
-    
+
     def __str__(self) -> str:
-        formatter = format_name(self.name)
-        name = str(formatter)
-        
-        return f"{self.id}:{name}"
+        return f"{self.id}:{self.name}"
