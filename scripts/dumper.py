@@ -10,8 +10,8 @@ sys.path.append(packages_dir)
 print("DEBUG: System path is:")
 for token in sys.path:
     print(f"\t{token}")
-from chess_clubs.club import Club
-from chess_clubs import get_page, parse_player, get_main_table
+from clubs.club import Club
+from clubs import get_page, parse_player, get_main_table
 
 club = Club("A6021250")
 club.load()

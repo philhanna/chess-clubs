@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
-import chess_clubs
+
+from clubs import get_active_player_list_url, get_club_name, get_main_table
+from util import get_page
 
 
 class Club:
@@ -27,11 +29,11 @@ class Club:
         and extracts relevant information from the third table on the page.
         """
         url = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
-        html = chess_clubs.get_page(url)
+        html = get_page(url)
         soup = BeautifulSoup(html, 'html.parser')
-        main_table = chess_clubs.get_main_table(soup)
-        self.name = chess_clubs.get_club_name(main_table)
-        self.url = chess_clubs.get_active_player_list_url(main_table)
+        main_table = get_main_table(soup)
+        self.name = get_club_name(main_table)
+        self.url = get_active_player_list_url(main_table)
 
     def __str__(self) -> str:
         parts = []

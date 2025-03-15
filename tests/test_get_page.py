@@ -1,7 +1,7 @@
 import pytest
 import requests
 from unittest.mock import patch
-from chess_clubs import get_page
+from util import get_page
 
 def test_get_page_happy_path():
     url = "https://example.com"

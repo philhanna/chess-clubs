@@ -1,7 +1,7 @@
 import pytest
 from bs4 import BeautifulSoup
-from chess_clubs import get_club_name
-from chess_clubs.club import Club
+from clubs import get_club_name
+from clubs.club import Club
 
 @pytest.fixture
 def club():

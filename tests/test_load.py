@@ -1,10 +1,10 @@
 import os
 import pytest
 from unittest.mock import patch
-from bs4 import BeautifulSoup
 
-from chess_clubs.club import Club
+from clubs.club import Club
 from tests.testdata import TESTDATA
+from util import get_page
 
 
 # Sample HTML with a valid structure (3 tables, correct elements)
@@ -59,8 +59,7 @@ SAMPLE_HTML_NO_PLAYER_LIST = """
     <table></table>
     <table></table>
     <table>
-        <tr>from chess_clubs import get_page
-
+        <tr>
             <td><font size="+1">A6021250: HIGHWAY 264 CHESS PROMOTIONS</font></td>
         </tr>
     </table>
@@ -69,7 +68,7 @@ SAMPLE_HTML_NO_PLAYER_LIST = """
 """
 
 
-@patch("chess_clubs.get_page")
+@patch("util.get_page")
 def test_load_success(mock_get_page):
     """Test that the load method works when at least 3 tables exist."""
     testfile = os.path.join(TESTDATA, "A6021250_main.html")
@@ -87,7 +86,7 @@ def test_load_success(mock_get_page):
     assert club.url == "https://www.uschess.org/datapage/top-affil-players.php?affil=A6021250&min=6&Search=Submit"
 
 
-@patch("chess_clubs.get_page")
+@patch("util.get_page")
 def test_load_fails_with_few_tables(mock_get_page):
     """Test that load raises an error if fewer than 3 tables are found."""
     mock_get_page.return_value = SAMPLE_HTML_FEW_TABLES
@@ -97,7 +96,7 @@ def test_load_fails_with_few_tables(mock_get_page):
         club.load()
 
 
-@patch("chess_clubs.get_page")
+@patch("util.get_page")
 def test_load_fails_missing_font_tag(mock_get_page):
     """Test that load raises an error if the font tag with size='+1' is missing."""
     mock_get_page.return_value = SAMPLE_HTML_NO_FONT_TAG
@@ -107,7 +106,7 @@ def test_load_fails_missing_font_tag(mock_get_page):
         club.load()
 
 
-@patch("chess_clubs.get_page")
+@patch("util.get_page")
 def test_load_fails_missing_active_player_list(mock_get_page):
     """Test that load raises an error if the Active Player List link is missing."""
     mock_get_page.return_value = SAMPLE_HTML_NO_PLAYER_LIST

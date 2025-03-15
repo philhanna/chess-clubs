@@ -1,6 +1,4 @@
-import requests
-from bs4 import BeautifulSoup, element
-from .player import Player
+from bs4 import element
 
 
 def get_active_player_list_url(main_table) -> str:
@@ -33,16 +31,6 @@ def get_club_name(main_table) -> str:
     return name_part
 
 
-def get_page(url: str) -> str:
-    """
-    Fetches the HTML content of a webpage from a given URL.
-    """
-    response = requests.get(
-        url, timeout=20)  # Set a timeout to avoid hanging requests
-    response.raise_for_status()  # Raise an error for HTTP error responses (4xx, 5xx)
-    return response.text
-
-
 def get_main_table(soup) -> element.Tag:
     """
     Extracts and returns the third HTML table from the parsed webpage.
@@ -53,22 +41,3 @@ def get_main_table(soup) -> element.Tag:
             f"Expected at least 3 tables, found {len(tables)}")
     table = tables[2]   # Get the 3rd table
     return table
-
-
-def parse_player(tr: element.Tag) -> Player:
-    """
-    Creates a Player object from player details found in this &lt;tr&gt;
-    """
-    tds = tr.find_all("td", recursive=False)
-    id = tds[1].get_text(strip=True)
-    name = tds[3].get_text(strip=True)
-    player = Player(id, name)
-    return player
-
-def player_name_from_id(id: str) -> str:
-    url = f"https://www.uschess.org/msa/thin.php?{id}"
-    html = get_page(url)
-    soup = BeautifulSoup(html, 'html.parser')
-    input_element = soup.find("input", {"name": "memname"})
-    name = input_element.get_text().strip() if input_element else ""
-    return name
