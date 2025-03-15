@@ -10,7 +10,7 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 packages_dir = os.path.join(project_root, "src")
 sys.path.append(packages_dir)
 
-from chess_clubs import get_page, parse_player, get_third_table
+from chess_clubs import get_page, parse_player, get_main_table
 from chess_clubs.club import Club
 
 
@@ -20,7 +20,7 @@ print(club)
 
 html = get_page(club.url)
 soup = BeautifulSoup(html, 'html.parser')
-table = get_third_table(soup)
+table = get_main_table(soup)
 with open("dump.html", "w") as out:
     print(table.prettify(), file=out)
     

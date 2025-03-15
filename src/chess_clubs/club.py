@@ -29,9 +29,9 @@ class Club:
         url = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
         html = chess_clubs.get_page(url)
         soup = BeautifulSoup(html, 'html.parser')
-        table3 = chess_clubs.get_third_table(soup)
-        self.name = chess_clubs.get_club_name(table3)
-        self.url = chess_clubs.get_active_player_list_url(table3)
+        main_table = chess_clubs.get_main_table(soup)
+        self.name = chess_clubs.get_club_name(main_table)
+        self.url = chess_clubs.get_active_player_list_url(main_table)
 
     def __str__(self) -> str:
         parts = []
