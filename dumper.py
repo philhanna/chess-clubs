@@ -10,7 +10,7 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 packages_dir = os.path.join(project_root, "src")
 sys.path.append(packages_dir)
 
-from chess_clubs import get_page, get_player, get_third_table
+from chess_clubs import get_page, parse_player, get_third_table
 from chess_clubs.club import Club
 
 
@@ -33,6 +33,6 @@ for th in table.find("tr").find_all("th", recursive=False):
 for i, tr in enumerate(table.find_all("tr", recursive=False)):
     if i == 0:
         continue    # skip the first row - headings
-    player = get_player(tr)
+    player = parse_player(tr)
     print(f"{i}. {str(player)}")
     

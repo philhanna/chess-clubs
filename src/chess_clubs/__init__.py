@@ -39,7 +39,7 @@ def get_page(url: str) -> str:
     return response.text
 
 
-def get_player(tr: element.Tag) -> Player:
+def parse_player(tr: element.Tag) -> Player:
     tds = tr.find_all("td", recursive=False)
     id = tds[1].get_text(strip=True)
     name = tds[3].get_text(strip=True)
