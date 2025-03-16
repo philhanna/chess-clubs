@@ -1,8 +1,9 @@
 import pytest
 import requests
 from unittest.mock import patch
+from tests.testdata import TESTDATA
 from util import get_page
-
+    
 def test_get_page_happy_path():
     url = "https://example.com"
     expected_html = "<html><body><h1>Test Page</h1></body></html>"

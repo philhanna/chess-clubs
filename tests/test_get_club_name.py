@@ -2,11 +2,14 @@ import pytest
 from bs4 import BeautifulSoup
 from clubs import get_club_name
 from clubs.club import Club
+from tests import get_config
 
 @pytest.fixture
 def club():
     """Fixture to create a Club instance."""
-    return Club(id="dummy")
+    config = get_config()
+    id = config["club_id"]
+    return Club(id)
 
 def test_get_club_name_valid(club):
     """Test that the method correctly extracts the club name from a valid table."""
