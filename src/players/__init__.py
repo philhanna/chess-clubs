@@ -1,4 +1,6 @@
 from bs4 import BeautifulSoup, element
+
+from util import get_page
 from .player import Player
 
 def parse_player(tr: element.Tag) -> Player:
