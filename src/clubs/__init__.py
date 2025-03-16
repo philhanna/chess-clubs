@@ -1,5 +1,8 @@
 from bs4 import element
 
+# This file contains functions that are called in the clubs package.
+# They are split out here from the Club class for ease of unit testing.
+
 
 def get_active_player_list_url(main_table) -> str:
     """
@@ -41,3 +44,9 @@ def get_main_table(soup) -> element.Tag:
             f"Expected at least 3 tables, found {len(tables)}")
     table = tables[2]   # Get the 3rd table
     return table
+
+from .club import Club 
+
+__all__ = [
+    'Club',    
+]
