@@ -9,6 +9,3 @@ from util import get_page
 def main_url():
     testdata = TESTDATA
     return "https://www.uschess.org/msa/AffDtlMain.php?A6021250"
-
-def test_load(main_url):
-    
