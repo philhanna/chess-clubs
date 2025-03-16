@@ -7,7 +7,7 @@ class Player:
     def __init__(self, id: str, name: str = None):
         self._id: str = id
         if not name:
-            from clubs import player_name_from_id
+            from players import player_name_from_id
             name = player_name_from_id(id)
         formatter = FormattedName(name)
         self._name: str = str(formatter)

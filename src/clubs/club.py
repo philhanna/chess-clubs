@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 
 from clubs import get_active_player_list_url, get_club_name, get_main_table
+from players import parse_player
 from util import get_page
 
 
@@ -22,6 +23,27 @@ class Club:
         self.url: str = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
         self.active_players_url: str = None
 
+    def active_players(self):
+        """ A generator that returns the active players in this club one at a time. """
+        if not self.active_players_url:
+            raise RuntimeError("The club object has not yet been loaded.")
+        html = get_page(self.active_players_url)
+        soup = BeautifulSoup(html, 'html.parser')
+        
+        # The active player table is the first <table> after the first <h4>
+        div = soup.find("h4")
+        assert div is not None
+        aptable = div.find_next('table')
+        assert aptable is not None
+        for i, tr in enumerate(aptable.find_all('tr')):
+            if i == 0:
+                continue    # First row is just column headers
+            player = parse_player(tr)
+            yield player
+
+        # Done
+        pass
+    
     def load(self):
         """Fetches and processes the club's details from the US Chess Federation website.
 

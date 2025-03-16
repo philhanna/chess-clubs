@@ -2,6 +2,7 @@ import os
 import sys
 from bs4 import BeautifulSoup
 
+
 # ----------------------------------------------------------------------
 # PROGRAM NAME:     dumper.py
 #
@@ -19,6 +20,7 @@ sys.path.append(project_root)
 # Now python will find our packages
 from clubs.club import Club
 from tests import get_config
+from util import get_page
 
 # Load the test configuration data
 config = get_config()
@@ -33,6 +35,6 @@ print("\n# ---------------------------------------------------------------------
 print(f"# {str(club)}")
 print("# ----------------------------------------------------------------------")
 
-# Get the active players page
-active_players_url = club.active_players_url
-print(f"\n{active_players_url=}")
+# Get the active players
+for i, player in enumerate(club.active_players(), 1):
+    print(f"{i} {str(player)}")
