@@ -35,10 +35,8 @@ class Club:
         self.active_players_url = get_active_player_list_url(main_table)
 
 
-    def active_players(self):
+    def get_active_players(self):
         """ A generator that returns the active players in this club one at a time. """
-        if not self.active_players_url:
-            raise RuntimeError("The club object has not yet been loaded.")
         html = get_page(self.active_players_url)
         soup = BeautifulSoup(html, 'html.parser')
         

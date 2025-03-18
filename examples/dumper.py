@@ -31,5 +31,5 @@ print(f"# {str(club)}")
 print("# ----------------------------------------------------------------------")
 
 # Get the active players
-for i, player in enumerate(club.active_players(), 1):
+for i, player in enumerate(club.get_active_players(), 1):
     print(f"{i} {str(player)}")
