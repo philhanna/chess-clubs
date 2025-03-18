@@ -14,6 +14,8 @@ def parse_player(tr: element.Tag) -> Player:
     return player
 
 def player_name_from_id(id: str) -> str:
+    """ Given a USCF player ID, returns the player's name
+    """
     url = f"https://www.uschess.org/msa/thin.php?{id}"
     html = get_page(url)
     soup = BeautifulSoup(html, 'html.parser')

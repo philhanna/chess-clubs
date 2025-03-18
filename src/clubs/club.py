@@ -22,6 +22,18 @@ class Club:
         self.name: str = None
         self.url: str = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
         self.active_players_url: str = None
+        
+        # Fetch and process the club's details from the US Chess
+        # Federation website.  Retrieve the webpage corresponding to the
+        # club's ID, parse the HTML content, and extract relevant
+        # information from the third table on the page.
+        
+        html = get_page(self.url)
+        soup = BeautifulSoup(html, 'html.parser')
+        main_table = get_main_table(soup)
+        self.name = get_club_name(main_table)
+        self.active_players_url = get_active_player_list_url(main_table)
+
 
     def active_players(self):
         """ A generator that returns the active players in this club one at a time. """
@@ -43,20 +55,9 @@ class Club:
 
         # Done
         pass
-    
-    def load(self):
-        """Fetches and processes the club's details from the US Chess Federation website.
-
-        Retrieves the webpage corresponding to the club's ID, parses the HTML content,
-        and extracts relevant information from the third table on the page.
-        """
-        html = get_page(self.url)
-        soup = BeautifulSoup(html, 'html.parser')
-        main_table = get_main_table(soup)
-        self.name = get_club_name(main_table)
-        self.active_players_url = get_active_player_list_url(main_table)
 
     def __str__(self) -> str:
+        """ Returns a string representation of this object """
         parts = []
         parts.append(f'ID="{self.id}"')
         parts.append(f'name="{self.name}"')

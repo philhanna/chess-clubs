@@ -1,7 +1,5 @@
 import os
 import sys
-from bs4 import BeautifulSoup
-
 
 # ----------------------------------------------------------------------
 # PROGRAM NAME:     dumper.py
@@ -18,17 +16,14 @@ sys.path.append(src_dir)
 sys.path.append(project_root)
 
 # Now python will find our packages
+from tests import config
 from clubs.club import Club
-from tests import get_config
-from util import get_page
 
 # Load the test configuration data
-config = get_config()
 club_id = config["club_id"]
 
-# Instantiate and load our test club
+# Create and load our test club
 club = Club(club_id)
-club.load()
 
 # Print the header for the club, which is the club ID and name
 print("\n# ----------------------------------------------------------------------")
