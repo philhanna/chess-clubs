@@ -20,14 +20,18 @@ from games.head_to_head import HeadToHead
 from games.summary import Summary
 
 # Load the example configuration data
+# (modify in config.json as desired)
 from tests import config
 player_id = config['head_to_head']['player1']
 opponent_id = config['head_to_head']['player2']
 
+# Create and load the head-to-head details for these players
 obj = HeadToHead(player_id, opponent_id)
 
+# Create an empty summary object
 summary = Summary()
 
+# Loop through the games
 for game in obj.games:
     print(game)
     summary.games += 1
@@ -38,4 +42,5 @@ for game in obj.games:
     if game.result == "D":
         summary.draws += 1
 
+# Print the summary
 print(summary)
