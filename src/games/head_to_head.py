@@ -26,9 +26,13 @@ class HeadToHead:
         html = get_page(url)
         soup = BeautifulSoup(html, 'html.parser')
         
-        # Loop through the games
+        # See if there are any head-to-head games
         th = soup.find("th", string=lambda text: text and "Event Name" in text)
-        tr = th.find_parent("tr")
+        if th is None:
+            return
+        tr = th.find_parent("tr")   # Skip the heading row
+        
+        # Loop through the games
         while True:
             tr = tr.find_next_sibling("tr")
             if not tr:
@@ -36,6 +40,5 @@ class HeadToHead:
             game = GameFactory.from_soup(tr)
             self.games.append(game)
         
-        # Done
-        
+        # Done      
         return
