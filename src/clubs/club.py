@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
-
+from typing import Generator
 from clubs import get_active_player_list_url, get_club_name, get_main_table
 from players import parse_player
+from players.player import Player
 from util import get_page
 
 
@@ -35,7 +36,7 @@ class Club:
         self.active_players_url = get_active_player_list_url(main_table)
 
 
-    def get_active_players(self):
+    def get_active_players(self) -> Generator[Player, None, None]:
         """ A generator that returns the active players in this club one at a time. """
         html = get_page(self.active_players_url)
         soup = BeautifulSoup(html, 'html.parser')
