@@ -129,7 +129,7 @@ def parse_sixth_td(game: Game, td: element.Tag):
     </td>
     """
     name = td.get_text(strip=True)
-    game.name = name
+    game.opponent_name = name
     return
 
 
