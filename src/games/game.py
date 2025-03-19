@@ -4,11 +4,14 @@ from bs4 import element
 
 class Game:
     def __init__(self):
-        self.tname: str = None      # Tournament name
-        self.tid: str = None        # Tournament ID
-        self.tdate: str = None      # Tournament date
-        self.sname: str = None      # Section name
-        self.rnumber: int = None    # Round number
+        self.tname: str = None          # Tournament name
+        self.tid: str = None            # Tournament ID
+        self.tdate: str = None          # Tournament date
+        self.sname: str = None          # Section name
+        self.rnumber: int = None        # Round number
+        self.color: str = None          # Color played
+        self.opponent_id: str = None    # Opponent ID
+
 
 def game_from_soup(tr: element.Tag) -> Game:
     # Create an empty Game object
@@ -23,14 +26,16 @@ def game_from_soup(tr: element.Tag) -> Game:
     parse_second_td(game, tds[1])   # Section name
     parse_third_td(game, tds[2])    # Round
     parse_fourth_td(game, tds[3])   # Color
+    parse_fifth_td(game, tds[4])    # Opponent ID
 
     # Done
     return game
 
+
 def parse_first_td(game: Game, td: element.Tag):
     """ Extracts the tournament name, ID, and date and stores them in
     instance variables.
-    
+
     The cell contains:
     <td>
         <a href="http://msa.uschess.org/XtblMain.php?202412219692">
@@ -60,10 +65,11 @@ def parse_first_td(game: Game, td: element.Tag):
     game.tdate = tdate
     return
 
+
 def parse_second_td(game: Game, td: element.Tag):
     """ Extracts the section name from this <td> and stores it in the
     game instance variable.
-    
+
     <td>
         ADULTS ONLY WEDNESDAY
     </td>
@@ -72,10 +78,11 @@ def parse_second_td(game: Game, td: element.Tag):
     game.sname = sname
     return
 
+
 def parse_third_td(game: Game, td: element.Tag):
     """ Extracts the round number from this <td> and stores it in the
     game instance variable.
-    
+
     <td>
         1
     </td>
@@ -84,13 +91,14 @@ def parse_third_td(game: Game, td: element.Tag):
     game.rnumber = rnumber
     return
 
+
 def parse_fourth_td(game: Game, td: element.Tag):
     """ Extracts the color played by the player from
-    
+
     <td>
         B
     </td>
-    
+
     Note that this may be empty or U, if color not known (fairly common)
     """
     color = td.get_text(strip=True)
@@ -99,4 +107,18 @@ def parse_fourth_td(game: Game, td: element.Tag):
     else:
         game.color = color
     return
-    
+
+
+def parse_fifth_td(game: Game, td: element.Tag):
+    """ Extracts the opponent ID
+    The <td> looks like this:
+
+    <td>
+     <a href="./gamestats.php?memid=12910923&amp;ptype=0&amp;rs=R&amp;dkey=wk_memid&amp;drill=32197553">
+      32197553
+     </a>
+    </td>   
+    """
+    id = td.get_text(strip=True)
+    game.opponent_id = id
+    return
