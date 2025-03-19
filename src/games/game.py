@@ -11,6 +11,7 @@ class Game:
         self.rnumber: int = None        # Round number
         self.color: str = None          # Color played
         self.opponent_id: str = None    # Opponent ID
+        self.opponent_name: str = None  # Opponent name
 
 
 def game_from_soup(tr: element.Tag) -> Game:
@@ -27,6 +28,7 @@ def game_from_soup(tr: element.Tag) -> Game:
     parse_third_td(game, tds[2])    # Round
     parse_fourth_td(game, tds[3])   # Color
     parse_fifth_td(game, tds[4])    # Opponent ID
+    parse_sixth_td(game, tds[5])    # Opponent name
 
     # Done
     return game
@@ -122,3 +124,14 @@ def parse_fifth_td(game: Game, td: element.Tag):
     id = td.get_text(strip=True)
     game.opponent_id = id
     return
+
+def parse_sixth_td(game: Game, td: element.Tag):
+    """ Extracts opponent name from this td:
+    <td>
+     <a href="http://msa.uschess.org/MbrDtlMain.php?32197553">
+      GRAHAM RF NAPIER
+     </a>
+    </td>
+    """
+    name = td.get_text(strip=True)
+    game.name = name
