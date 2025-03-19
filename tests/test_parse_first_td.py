@@ -2,7 +2,8 @@
 from bs4 import BeautifulSoup
 import pytest
 
-from games.game import Game, parse_first_td
+from games.game import Game
+from games.game_factory import parse_first_td
 
 
 def test_parse_first_td_valid():

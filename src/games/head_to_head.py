@@ -1,6 +1,6 @@
 from typing import List
 from bs4 import BeautifulSoup
-from games.game import Game, game_from_soup
+from games.game import Game
 from util import get_page
 
 
