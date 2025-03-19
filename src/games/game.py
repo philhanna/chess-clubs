@@ -25,5 +25,6 @@ class Game:
         parts.append(f'opponent_id="{self.opponent_id}"')
         parts.append(f'opponent_name="{self.opponent_name}"')
         parts.append(f'result="{self.result}"')
-        output = ",".join(parts)
+        inner = ",".join(parts)
+        output = f"Game({inner})"
         return output
