@@ -1,6 +1,7 @@
 from typing import List
 from bs4 import BeautifulSoup
 from games.game import Game
+from games.game_factory import GameFactory
 from util import get_page
 
 
@@ -14,8 +15,7 @@ def get_head_to_head_url(player_id: str, opponent_id: str) -> str:
     return url
 
 class HeadToHead:
-    def __init__(self, player_id: str, opponent_id: str):
-        
+    def __init__(self, player_id: str, opponent_id: str):        
         # Instance variables
         self.player_id: str = player_id
         self.opponent_id: str = opponent_id
@@ -25,7 +25,6 @@ class HeadToHead:
         url = get_head_to_head_url(player_id, opponent_id)
         html = get_page(url)
         soup = BeautifulSoup(html, 'html.parser')
-        #with open("/tmp/soup.html", "w") as out: print(soup.prettify(), file=out)
         
         # Loop through the games
         th = soup.find("th", string=lambda text: text and "Event Name" in text)
@@ -34,7 +33,9 @@ class HeadToHead:
             tr = tr.find_next_sibling("tr")
             if not tr:
                 break
-            #game = game_from_soup(tr)
-            
-            
-    pass
+            game = GameFactory.from_soup(tr)
+            self.games.append(game)
+        
+        # Done
+        
+        return

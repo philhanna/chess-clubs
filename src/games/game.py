@@ -1,7 +1,3 @@
-import re
-from bs4 import element
-
-
 class Game:
     def __init__(self):
         self.tname: str = None          # Tournament name
