@@ -12,6 +12,7 @@ class Game:
         self.color: str = None          # Color played
         self.opponent_id: str = None    # Opponent ID
         self.opponent_name: str = None  # Opponent name
+        self.result: str = None         # Result
 
 
 def game_from_soup(tr: element.Tag) -> Game:
@@ -29,6 +30,8 @@ def game_from_soup(tr: element.Tag) -> Game:
     parse_fourth_td(game, tds[3])   # Color
     parse_fifth_td(game, tds[4])    # Opponent ID
     parse_sixth_td(game, tds[5])    # Opponent name
+    parse_seventh_td(game, tds[6])  # Rating string
+    parse_eighth_td(game, tds[7])   # Result (W|L|D)
 
     # Done
     return game
@@ -125,6 +128,7 @@ def parse_fifth_td(game: Game, td: element.Tag):
     game.opponent_id = id
     return
 
+
 def parse_sixth_td(game: Game, td: element.Tag):
     """ Extracts opponent name from this td:
     <td>
@@ -135,3 +139,16 @@ def parse_sixth_td(game: Game, td: element.Tag):
     """
     name = td.get_text(strip=True)
     game.name = name
+    return
+
+
+def parse_seventh_td(game: Game, td: element.Tag):
+    """ (Not used) """
+    return
+
+
+def parse_eighth_td(game: Game, td: element.Tag):
+    """ Extracts the win/loss/draw result """
+    result = td.get_text(strip=True)
+    game.result = result
+    return
