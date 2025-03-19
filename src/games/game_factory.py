@@ -1,5 +1,6 @@
 import re
 from bs4 import element
+from name_formatter import FormattedName
 
 from games.game import Game
 
@@ -129,6 +130,7 @@ def parse_sixth_td(game: Game, td: element.Tag):
     </td>
     """
     name = td.get_text(strip=True)
+    name = FormattedName(name).get_last_first()
     game.opponent_name = name
     return
 

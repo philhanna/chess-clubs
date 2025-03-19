@@ -1,7 +1,9 @@
 from typing import List
 from bs4 import BeautifulSoup, element
+from name_formatter import FormattedName
 from games.game import Game
 from games.game_factory import GameFactory
+from games.summary import Summary
 from util import get_page
 
 
@@ -11,6 +13,7 @@ class HeadToHead:
         self.player_id: str = player_id
         self.opponent_id: str = opponent_id
         self.games: List[Game] = []
+        self.summary: Summary = Summary()
 
         # Get the head to head page
         url = get_head_to_head_url(player_id, opponent_id)
@@ -20,6 +23,7 @@ class HeadToHead:
 
         # Get the player name
         player_name = get_player_name(soup)
+        player_name = FormattedName(player_name).get_last_first()
 
         # See if there are any head-to-head games
         th = soup.find("th", string=lambda text: text and "Event Name" in text)
@@ -46,6 +50,9 @@ class HeadToHead:
             # Add it to the list
             self.games.append(game)
 
+            # Update the summary
+            self.summary.add(game)
+            
         # Done
         return
 

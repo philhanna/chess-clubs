@@ -1,3 +1,6 @@
+from games.game import Game
+
+
 class Summary:
     def __init__(self):
         self._games: int = 0
@@ -17,15 +20,18 @@ class Summary:
         output = f"Summary({inner})"
         return output
     
+    def add(self, game: Game):
+        if game.result == "W":
+            self.wins += 1
+        elif game.result == "L":
+            self.losses += 1
+        elif game.result == "D":
+            self.draws += 1
+        pass
+    
     @property
     def games(self) -> int:
-        return self._games
-
-    @games.setter
-    def games(self, value: int):
-        if value < 0:
-            raise ValueError("Games cannot be negative")
-        self._games = value
+        return self.wins + self.losses + self.draws
 
     @property
     def wins(self) -> int:
@@ -33,8 +39,6 @@ class Summary:
 
     @wins.setter
     def wins(self, value: int):
-        if value < 0:
-            raise ValueError("Wins cannot be negative")
         self._wins = value
         self._update_pct()
 
@@ -44,8 +48,6 @@ class Summary:
 
     @losses.setter
     def losses(self, value: int):
-        if value < 0:
-            raise ValueError("Losses cannot be negative")
         self._losses = value
         self._update_pct()
 
@@ -65,7 +67,7 @@ class Summary:
         return self._pct
 
     def _update_pct(self):
-        total = self._wins + self._losses + self._draws
+        total = self.games
         if total > 0:
             self._pct = 100.0 * (self._wins + 0.5 * self._draws) / total
         else:
