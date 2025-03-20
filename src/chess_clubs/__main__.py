@@ -6,7 +6,8 @@ output database name to generate a database for the chess club.
 """
 
 import argparse
-from .core import main  # Importing the main function from the core module
+
+from chess_clubs.core import Main
 
 if __name__ == '__main__':
     # Set up command-line argument parsing
@@ -29,4 +30,5 @@ if __name__ == '__main__':
         args.dbname = f"{args.clubid}.db"
 
     # Call the main function with the provided arguments
-    main(args.clubid, args.dbname)
+    main = Main(args.clubid, args.dbname)
+    main.run()
