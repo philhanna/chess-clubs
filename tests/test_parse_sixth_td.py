@@ -24,7 +24,7 @@ def test_parse_sixth_td_valid_name(game):
     """
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == "GRAHAM RF NAPIER"
+    assert game.opponent_name == "Napier, Graham Rf"
 
 def test_parse_sixth_td_different_name(game):
     td_content = """
@@ -36,7 +36,7 @@ def test_parse_sixth_td_different_name(game):
     """
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == "JOHN DOE"
+    assert game.opponent_name == "Doe, John"
 
 def test_parse_sixth_td_whitespace(game):
     td_content = """
@@ -48,7 +48,7 @@ def test_parse_sixth_td_whitespace(game):
     """
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == "JANE SMITH"
+    assert game.opponent_name == "Smith, Jane"
 
 def test_parse_sixth_td_no_anchor(game):
     td_content = """
@@ -58,13 +58,13 @@ def test_parse_sixth_td_no_anchor(game):
     """
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == "MICHAEL BROWN"
+    assert game.opponent_name == "Brown, Michael"
 
 def test_parse_sixth_td_empty(game):
     td_content = "<td></td>"
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == ""
+    assert game.opponent_name == ""
 
 def test_parse_sixth_td_nested_tags(game):
     td_content = """
@@ -76,7 +76,7 @@ def test_parse_sixth_td_nested_tags(game):
     """
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == "DAVID LEE"
+    assert game.opponent_name == "Lee, David"
 
 def test_parse_sixth_td_special_characters(game):
     td_content = """
@@ -88,7 +88,7 @@ def test_parse_sixth_td_special_characters(game):
     """
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == "O'REILLY"
+    assert game.opponent_name == "O'Reilly"
 
 def test_parse_sixth_td_numbers_in_name(game):
     td_content = """
@@ -100,4 +100,4 @@ def test_parse_sixth_td_numbers_in_name(game):
     """
     td = create_td_tag(td_content)
     parse_sixth_td(game, td)
-    assert game.name == "BOB 123"
+    assert game.opponent_name == "123, Bob"
