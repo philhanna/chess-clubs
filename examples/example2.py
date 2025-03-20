@@ -16,8 +16,8 @@ sys.path.append(src_dir)        # So it can find our classes
 sys.path.append(project_root)   # So it can find "tests"
 
 # Now do our imports
-from games.head_to_head import HeadToHead
-from games.summary import Summary
+from clubs.head_to_head import HeadToHead
+from clubs.summary import Summary
 
 # Load the example configuration data
 # (modify in config.json as desired)
@@ -27,6 +27,7 @@ opponent_id = config['head_to_head']['player2']
 
 # Create and load the head-to-head details for these players
 obj = HeadToHead(player_id, opponent_id)
+obj.load()
 
 # Loop through the games
 for game in obj.games:

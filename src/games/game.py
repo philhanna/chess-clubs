@@ -11,7 +11,13 @@ class Game:
         self.opponent_id: str = None    # Opponent ID
         self.opponent_name: str = None  # Opponent name
         self.result: str = None         # Result
-        
+    
+    def invert(self):
+        self.player_id, self.opponent_id = self.opponent_id, self.player_id
+        self.player_name, self.opponent_name = self.opponent_name, self.player_name
+        self.color = invert_color(self.color)
+        self.result = invert_result(self.result)
+                    
     def __str__(self) -> str:
         parts = []
         parts.append(f'player_id="{self.player_id}"')
@@ -28,3 +34,21 @@ class Game:
         inner = ",".join(parts)
         output = f"Game({inner})"
         return output
+
+#   ============================================================
+#   Functions
+#   ============================================================
+            
+def invert_color(color: str) -> str:
+    if color and color == "W":
+        return "B"
+    if color and color == "B":
+        return "W"
+    return color
+
+def invert_result(result: str) -> str:
+    if result and result == "W":
+        return "L"
+    if result and result == "L":
+        return "W"
+    return result

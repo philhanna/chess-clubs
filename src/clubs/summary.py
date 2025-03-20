@@ -9,6 +9,11 @@ class Summary:
         self._draws: int = 0
         self._pct: float = 0.0
     
+    def invert(self):
+        self.wins, self.losses = self.losses, self.wins
+        self._update_pct()
+        return
+    
     def __str__(self) -> str:
         parts = []
         parts.append(f'games="{self.games}"')
@@ -20,14 +25,14 @@ class Summary:
         output = f"Summary({inner})"
         return output
     
-    def add(self, game: Game):
+    def update_with(self, game: Game):
         if game.result == "W":
             self.wins += 1
         elif game.result == "L":
             self.losses += 1
         elif game.result == "D":
             self.draws += 1
-        pass
+        return
     
     @property
     def games(self) -> int:
