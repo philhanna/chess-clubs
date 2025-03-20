@@ -2,7 +2,18 @@ from name_formatter import FormattedName
 
 
 class Player:
-    """ A player in this club """
+    """ 
+    A player in this club.
+
+    Attributes:
+        _id (str): The unique identifier of the player.
+        _name (str): The formatted name of the player (Last, First).
+        _state (str): The state in which the player resides.
+        _rating (int): The player's rating as of the last recorded date.
+        _date (str): The date the rating was recorded.
+        _event_count (int): The number of tournaments the player has participated in.
+        _last_event (str): The ID of the last tournament the player participated in.
+    """
 
     def __init__(self,
                  id: str,
@@ -12,12 +23,30 @@ class Player:
                  date: str = None,
                  event_count: int = None,
                  last_event: str = None):
+        """
+        Initializes a Player object.
+
+        Args:
+            id (str): The unique identifier for the player.
+            name (str, optional): The player's name. If not provided, it is looked up using the player ID.
+            state (str, optional): The state in which the player resides.
+            rating (int, optional): The player's rating.
+            date (str, optional): The date the rating was recorded.
+            event_count (int, optional): The number of tournaments the player has participated in.
+            last_event (str, optional): The ID of the last tournament the player played in.
+        """
         self._id: str = id
+        
+        # If no name is provided, attempt to retrieve it from an external module
         if not name:
+            # Import here to avoid circular dependency issues
             from players import player_name_from_id
             name = player_name_from_id(id)
+            
+        # Format the name in "Last, First" order
         formatted = FormattedName(name)
         self._name: str = formatted.get_last_first()
+        
         self._state: str = state
         self._rating: int = rating
         self._date: str = date
@@ -25,6 +54,12 @@ class Player:
         self._last_event: str = last_event
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the Player.
+
+        Returns:
+            str: A string in the format "Player(id:name)".
+        """
         return f"Player({self.id}:{self.name})"
 
     @property
@@ -36,7 +71,7 @@ class Player:
     def name(self) -> str:
         """Returns the name of the player."""
         return self._name
-    
+
     @name.setter
     def name(self, value: str):
         """Sets the name of the player and ensures it's formatted."""
