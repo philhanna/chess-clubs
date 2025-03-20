@@ -4,7 +4,7 @@ from bs4 import element
 # They are split out here from the Club class for ease of unit testing.
 
 
-def get_active_player_list_url(main_table) -> str:
+def get_active_player_list_url(main_table, min_games=5) -> str:
     """
     Creates the URL that can be used to retrieve the active player list.
     This URL will add a filter to include only those players with
@@ -12,7 +12,7 @@ def get_active_player_list_url(main_table) -> str:
     """
     link = main_table.find('a', string="Active Player List")
     url = link.get("href")
-    url += "&min=6"
+    url += f"&min={min_games}"
     url += "&Search=Submit"
     return url
 

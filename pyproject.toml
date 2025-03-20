@@ -6,18 +6,14 @@ build-backend = "setuptools.build_meta"
 name = "chess-clubs"
 version = "0.1.0"
 description = "Chess clubs"
-authors = [{name = "Phil Hanna", email = "ph1204@gmail.com"}]
+authors = [{ name = "Phil Hanna", email = "ph1204@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = [
-    "requests",
-    "bs4"
-]
+dependencies = ["requests", "bs4"]
 
 [tool.setuptools]
-packages = ["chess_clubs"]
+packages = ["chess_clubs", "clubs", "games", "players", "util"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "chess_clubs"]
-

@@ -51,6 +51,7 @@ class Club:
         for i, tr in enumerate(aptable.find_all('tr')):
             if i == 0:
                 continue    # First row is just column headers
+
             player = parse_player(tr)
             yield player
 
