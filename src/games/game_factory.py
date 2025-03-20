@@ -26,9 +26,7 @@ class GameFactory:
 
         # Parse the <tr> for the game attributes
         tds = tr.find_all("td")
-        if len(tds) < 8:
-            errmsg = f"Expected 8 <td> elements, found {len(tds)}"
-            raise RuntimeError(errmsg)
+        assert len(tds) >= 8, f"Expected 8 <td> elements, found {len(tds)}"
 
         parse_first_td(game, tds[0])    # Tournament name, ID, and date
         parse_second_td(game, tds[1])   # Section name
