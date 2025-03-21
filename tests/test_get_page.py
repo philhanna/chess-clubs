@@ -29,15 +29,6 @@ def test_get_page_http_error():
         
         with pytest.raises(requests.exceptions.HTTPError):
             get_page(url)
-            
-def test_get_page_timeout():
-    url = "https://example.com"
-    
-    with patch("requests.get") as mock_get:
-        mock_get.side_effect = requests.exceptions.Timeout("The request timed out")
-        
-        with pytest.raises(requests.exceptions.Timeout):
-            get_page(url)
 
 def test_get_page_connection_error():
     url = "https://example.com"

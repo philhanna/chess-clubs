@@ -69,9 +69,16 @@ def get_main_table(soup) -> element.Tag:
     return tables[2]  # Get the 3rd table
 
 
+import time
+import requests
+
+MAX_ATTEMPTS = 3  # Set the maximum number of attempts
+TIMEOUT = 20  # Set the timeout value in seconds
+RETRY_DELAY = 5  # Set the delay between retries in seconds
+
 def get_page(url: str) -> str:
     """
-    Fetches the HTML content of a webpage from a given URL.
+    Fetches the HTML content of a webpage from a given URL, retrying on timeout errors.
 
     Args:
         url (str): The URL of the webpage to fetch.
@@ -82,14 +89,23 @@ def get_page(url: str) -> str:
     Raises:
         requests.exceptions.RequestException: If the request encounters an error.
     """
-    # Set a timeout to avoid indefinitely hanging requests
-    response = requests.get(url, timeout=20)
-
-    # Raise an error for HTTP responses with status codes 4xx or 5xx
-    response.raise_for_status()
-
-    return response.text
-
+    for attempt in range(MAX_ATTEMPTS):
+        try:
+            # Attempt to fetch the page
+            response = requests.get(url, timeout=TIMEOUT)
+            response.raise_for_status()  # Raise an error for bad status codes
+            return response.text
+        except requests.exceptions.Timeout:
+            if attempt < MAX_ATTEMPTS - 1:
+                # If a timeout occurs and attempts are remaining, retry
+                print(f"Timeout occurred, retrying... ({attempt + 1}/{MAX_ATTEMPTS})")
+                time.sleep(RETRY_DELAY)
+            else:
+                # Raise the exception after the last attempt
+                raise
+        except requests.exceptions.RequestException as e:
+            # For any other request exception, raise it immediately
+            raise e
 
 def invert_color(color: str) -> str:
     """

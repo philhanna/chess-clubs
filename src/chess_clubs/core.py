@@ -123,6 +123,15 @@ class Main():
             last_event  TEXT        -- Last tournament played
         );
         
+        CREATE TABLE summaries (
+            pid         TEXT NOT NULL,  -- Unique ID of player 1
+            oid         TEXT NOT NULL,  -- Unique ID of player 2
+            wins        INT,        -- Number of wins
+            losses      INT,        -- Number of losses
+            draws       INT,        -- Number of draws
+            PRIMARY KEY (pid, oid)
+        );
+        
         CREATE TABLE tournaments (
             id          TEXT NOT NULL PRIMARY KEY, -- Unique Tournament ID
             name        TEXT,       -- Tournament name
