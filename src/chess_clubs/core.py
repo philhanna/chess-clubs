@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from chess_clubs.club import Club
+from chess_clubs.club import Club, Player
 
 
 class Main():
@@ -42,23 +42,31 @@ class Main():
         # Execution complete
         return
 
-    def add_club(self, con, club):
+    def add_club(self, con: sqlite3.Connection, club: Club):
         """ 
-        Inserts club details into the database
+        Adds the club to the database if it is not already there
         """
-        sql = """ INSERT INTO clubs (id, name, url) VALUES(?, ?, ?) """
         cur = con.cursor()
+
+        # Check whether the club already exists in the database
+        sql = """ SELECT 1 FROM clubs WHERE id=? """
+        cur.execute(sql, (club.id,))
+        if cur.fetchone() is not None:
+            return
+
+        # Insert club details into database
+        sql = """ INSERT INTO clubs (id, name, url) VALUES(?, ?, ?) """
         cur.execute(sql, (club.id, club.name, club.url))
         con.commit()
         return
 
-    def add_player(self, con, player):
+    def add_player(self, con: sqlite3.Connection, player: Player):
         """
         Adds the player to the database if it is not already there
         """
         cur = con.cursor()
 
-        # Check whether the player already exists in the database """
+        # Check whether the player already exists in the database
         sql = """ SELECT 1 FROM players WHERE id=? """
         cur.execute(sql, (player.id,))
         if cur.fetchone() is not None:
@@ -71,7 +79,6 @@ class Main():
         VALUES(?, ?, ?, ?, ?, ?, ?)    
     
         """
-
         cur.execute(sql, (player.id,
                           player.name,
                           player.state,
@@ -80,8 +87,9 @@ class Main():
                           player.event_count,
                           player.last_event))
         con.commit()
+        return
 
-    def create_tables(self, con):
+    def create_tables(self, con: sqlite3.Connection):
         """
         Creates the database and tables
         """

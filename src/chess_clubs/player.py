@@ -1,6 +1,7 @@
 from name_formatter import FormattedName
 
 
+
 class Player:
     """ 
     A player in this club.
@@ -40,7 +41,7 @@ class Player:
         # If no name is provided, attempt to retrieve it from an external module
         if not name:
             # Import here to avoid circular dependency issues
-            from players import player_name_from_id
+            from chess_clubs import player_name_from_id
             name = player_name_from_id(id)
             
         # Format the name in "Last, First" order

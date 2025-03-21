@@ -62,12 +62,10 @@ def get_main_table(soup) -> element.Tag:
         element.Tag: The third HTML table found in the document.
 
     Raises:
-        ValueError: If fewer than three tables are found in the HTML.
+        AssertionError: If fewer than three tables are found in the HTML.
     """
     tables = soup.find_all("table", recursive=True)
-    if len(tables) < 3:
-        raise ValueError(f"Expected at least 3 tables, found {len(tables)}")
-
+    assert len(tables) >= 3, f"Expected at least 3 tables, found {len(tables)}"
     return tables[2]  # Get the 3rd table
 
 
@@ -190,4 +188,7 @@ def player_name_from_id(id: str) -> str:
 
     # Locate the input field containing the player's name
     input_element = soup.find("input", {"name": "memname"})
-    return input_element.get_text(strip=True) if input_element else ""
+    if not input_element:
+        return ""
+    name = input_element.get("value")
+    return name.strip()
