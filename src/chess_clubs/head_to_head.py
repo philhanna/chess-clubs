@@ -1,10 +1,10 @@
 from typing import List
 from bs4 import BeautifulSoup, element
 from name_formatter import FormattedName
-from games.game import Game
-from games.game_factory import GameFactory
-from clubs.summary import Summary
-from util import get_page
+from chess_clubs import get_page
+from chess_clubs.game import Game
+from chess_clubs.game_factory import GameFactory
+from chess_clubs.summary import Summary
 
 class HeadToHead:
     """

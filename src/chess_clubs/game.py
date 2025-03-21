@@ -1,4 +1,4 @@
-from games import invert_color, invert_result
+from chess_clubs import invert_color, invert_result
 
 
 class Game:

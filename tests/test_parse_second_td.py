@@ -1,8 +1,7 @@
-import pytest
 from bs4 import BeautifulSoup
 
-from games.game import Game
-from games.game_factory import parse_second_td
+from chess_clubs.game import Game
+from chess_clubs.game_factory import parse_second_td
 
 def test_parse_second_td_valid():
     html = '<td>ADULTS ONLY WEDNESDAY</td>'

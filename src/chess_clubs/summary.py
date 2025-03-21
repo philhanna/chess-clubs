@@ -1,4 +1,4 @@
-from games.game import Game
+from chess_clubs.game import Game
 
 class Summary:
     """

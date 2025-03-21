@@ -1,10 +1,9 @@
 from bs4 import BeautifulSoup
 from typing import Dict, Generator, Tuple
-from clubs import get_active_player_list_url, get_club_name, get_main_table
-from clubs.head_to_head import HeadToHead
-from players import parse_player
-from players.player import Player
-from util import get_page
+
+from chess_clubs import get_active_player_list_url, get_club_name, get_main_table, get_page, parse_player
+from chess_clubs.head_to_head import HeadToHead
+from chess_clubs.player import Player
 
 class Club:
     """

@@ -1,6 +1,4 @@
-import pytest
-
-from clubs.head_to_head import HeadToHead
+from chess_clubs.head_to_head import HeadToHead
 from tests import config
 
 def test_good_pair():

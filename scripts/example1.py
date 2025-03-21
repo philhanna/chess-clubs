@@ -16,7 +16,7 @@ sys.path.append(src_dir)        # So it can find our classes
 sys.path.append(project_root)   # So it can find "tests"
 
 # Now python will find our packages
-from clubs.club import Club
+from chess_clubs.club import Club
 
 # Load the test configuration data
 from tests import config

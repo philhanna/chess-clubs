@@ -2,8 +2,8 @@ import pytest
 from bs4 import BeautifulSoup
 from unittest.mock import Mock
 
-from games.game import Game
-from games.game_factory import parse_third_td 
+from chess_clubs.game import Game
+from chess_clubs.game_factory import parse_third_td 
 
 
 def create_td_tag(content):

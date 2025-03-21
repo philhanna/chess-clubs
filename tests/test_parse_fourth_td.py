@@ -2,8 +2,8 @@ import pytest
 from bs4 import BeautifulSoup
 from unittest.mock import Mock
 
-from games.game import Game
-from games.game_factory import parse_fourth_td
+from chess_clubs.game import Game
+from chess_clubs.game_factory import parse_fourth_td
 
 # Assuming the function is in a module called 'parser'
 

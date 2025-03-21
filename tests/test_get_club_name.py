@@ -1,6 +1,6 @@
 import pytest
 from bs4 import BeautifulSoup
-from clubs import get_club_name
+from chess_clubs import get_club_name
 
 def test_get_club_name_valid():
     """Test that the method correctly extracts the club name from a valid table."""

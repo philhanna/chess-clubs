@@ -1,7 +1,7 @@
 import re
 from bs4 import element
 from name_formatter import FormattedName
-from games.game import Game
+from chess_clubs.game import Game
 
 
 class GameFactory:

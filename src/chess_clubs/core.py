@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from clubs.club import Club
+from chess_clubs.club import Club
 
 
 class Main():

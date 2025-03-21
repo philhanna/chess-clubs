@@ -16,8 +16,8 @@ sys.path.append(src_dir)        # So it can find our classes
 sys.path.append(project_root)   # So it can find "tests"
 
 # Now do our imports
-from clubs.head_to_head import HeadToHead
-from clubs.summary import Summary
+from chess_clubs.head_to_head import HeadToHead
+from chess_clubs.summary import Summary
 
 # Load the example configuration data
 # (modify in config.json as desired)

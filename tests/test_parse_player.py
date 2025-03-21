@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
-from players import parse_player
-from players.player import Player
+from chess_clubs import parse_player
+from chess_clubs.player import Player
 
 
 def test_parse_player():
