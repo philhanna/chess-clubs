@@ -20,7 +20,7 @@ from chess_clubs.head_to_head import HeadToHead
 from chess_clubs.summary import Summary
 
 # Load the example configuration data
-# (modify in config.json as desired)
+# (modify in test_config.json as desired)
 from tests import config
 player_id = config['head_to_head']['player1']
 opponent_id = config['head_to_head']['player2']

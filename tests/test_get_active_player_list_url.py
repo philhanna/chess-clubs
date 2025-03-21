@@ -2,7 +2,9 @@ import pytest
 from bs4 import BeautifulSoup
 
 from chess_clubs import get_active_player_list_url
+from chess_clubs.config import load_config
 
+config = load_config()
 
 def make_table_with_link(href="/some/path?param=value"):
     html = f'''
@@ -14,17 +16,18 @@ def make_table_with_link(href="/some/path?param=value"):
 
 def test_default_min_games():
     table = make_table_with_link("/players?sort=rating")
-    url = get_active_player_list_url(table)
-    assert url == "/players?sort=rating&min=5&Search=Submit"
-
+    actual = get_active_player_list_url(table)
+    expected = f"/players?sort=rating&min={config.app.MIN_GAMES}&Search=Submit"
+    assert actual == expected
+    
 def test_custom_min_games():
     table = make_table_with_link("/players?sort=rating")
-    url = get_active_player_list_url(table, min_games=10)
+    url = get_active_player_list_url(table, MIN_GAMES=10)
     assert url == "/players?sort=rating&min=10&Search=Submit"
 
 def test_existing_query_parameters():
     table = make_table_with_link("/list?category=active")
-    url = get_active_player_list_url(table, min_games=20)
+    url = get_active_player_list_url(table, MIN_GAMES=20)
     assert url == "/list?category=active&min=20&Search=Submit"
 
 def test_no_link_raises_exception():

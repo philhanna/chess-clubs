@@ -1,10 +1,13 @@
+import time
 from bs4 import BeautifulSoup, element
 import requests
 
+from chess_clubs.config import load_config
 from chess_clubs.player import Player
 
+config = load_config()
 
-def get_active_player_list_url(main_table, min_games=5) -> str:
+def get_active_player_list_url(main_table, MIN_GAMES=config.app.MIN_GAMES) -> str:
     """
     Constructs the URL for retrieving the active player list.
 
@@ -21,7 +24,7 @@ def get_active_player_list_url(main_table, min_games=5) -> str:
     """
     link = main_table.find('a', string="Active Player List")
     url = link.get("href")
-    url += f"&min={min_games}"
+    url += f"&min={MIN_GAMES}"
     url += "&Search=Submit"
     return url
 
@@ -69,13 +72,6 @@ def get_main_table(soup) -> element.Tag:
     return tables[2]  # Get the 3rd table
 
 
-import time
-import requests
-
-MAX_ATTEMPTS = 3  # Set the maximum number of attempts
-TIMEOUT = 20  # Set the timeout value in seconds
-RETRY_DELAY = 5  # Set the delay between retries in seconds
-
 def get_page(url: str) -> str:
     """
     Fetches the HTML content of a webpage from a given URL, retrying on timeout errors.
@@ -89,6 +85,11 @@ def get_page(url: str) -> str:
     Raises:
         requests.exceptions.RequestException: If the request encounters an error.
     """
+    config = load_config()
+    MAX_ATTEMPTS = config.net.MAX_ATTEMPTS
+    TIMEOUT = config.net.TIMEOUT
+    RETRY_DELAY = config.net.RETRY_DELAY
+
     for attempt in range(MAX_ATTEMPTS):
         try:
             # Attempt to fetch the page
@@ -98,7 +99,8 @@ def get_page(url: str) -> str:
         except requests.exceptions.Timeout:
             if attempt < MAX_ATTEMPTS - 1:
                 # If a timeout occurs and attempts are remaining, retry
-                print(f"Timeout occurred, retrying... ({attempt + 1}/{MAX_ATTEMPTS})")
+                print(
+                    f"Timeout occurred, retrying... ({attempt + 1}/{MAX_ATTEMPTS})")
                 time.sleep(RETRY_DELAY)
             else:
                 # Raise the exception after the last attempt
@@ -106,6 +108,7 @@ def get_page(url: str) -> str:
         except requests.exceptions.RequestException as e:
             # For any other request exception, raise it immediately
             raise e
+
 
 def invert_color(color: str) -> str:
     """

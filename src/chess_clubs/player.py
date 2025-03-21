@@ -1,7 +1,6 @@
 from name_formatter import FormattedName
 
 
-
 class Player:
     """ 
     A player in this club.
@@ -37,17 +36,17 @@ class Player:
             last_event (str, optional): The ID of the last tournament the player played in.
         """
         self._id: str = id
-        
+
         # If no name is provided, attempt to retrieve it from an external module
         if not name:
             # Import here to avoid circular dependency issues
             from chess_clubs import player_name_from_id
             name = player_name_from_id(id)
-            
+
         # Format the name in "Last, First" order
         formatted = FormattedName(name)
         self._name: str = formatted.get_last_first()
-        
+
         self._state: str = state
         self._rating: int = rating
         self._date: str = date
