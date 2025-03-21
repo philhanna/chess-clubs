@@ -94,6 +94,17 @@ class Main():
             url         TEXT        -- Source URL for club information
         );
 
+        CREATE TABLE games (
+            pid         TEXT NOT NULL,  -- Unique ID of player 1
+            oid         TEXT NOT NULL,  -- Unique ID of player 2
+            tid         TEXT,       -- Tournament ID
+            sname       TEXT,       -- Section name
+            rnumber     INT,        -- Round number
+            color       TEXT,       -- Color played ("W" for White, "B" for Black)
+            result      TEXT,       -- Result ("W" for win, "L" for loss, "D" for draw)
+            PRIMARY KEY (pid, oid)                  
+        );
+        
         CREATE TABLE players (
             id          TEXT NOT NULL PRIMARY KEY, -- Unique Player ID
             name        TEXT,       -- Player's name
@@ -102,6 +113,17 @@ class Main():
             rating      INT,        -- USCF rating
             event_count INT,        -- Number of tournaments played
             last_event  TEXT        -- Last tournament played
+        );
+        
+        CREATE TABLE tournaments (
+            id          TEXT NOT NULL PRIMARY KEY, -- Unique Tournament ID
+            name        TEXT,       -- Tournament name
+            location    TEXT,       -- Location
+            date        TEXT,       -- Date
+            club_id     TEXT,       -- Club ID 
+            chief_td_id TEXT,       -- ID of chief tournament director
+            n_sections  INT,        -- Number of sections
+            n_players   INT        -- Number of players
         );
         
         """
