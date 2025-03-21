@@ -11,18 +11,33 @@ class GameFactory:
 
     def from_soup(tr: element.Tag) -> Game:
         """
-        Parses an HTML table row (<tr>) and creates a Game object with extracted attributes.
+        Parses an HTML table row (<tr>) from a Game Statistics page in
+        the USCF website and creates a Game object with extracted attributes.
+        The Game Statistics page is the one that shows lifetime head-to-head
+        matchups between two players.  The url is created from the
+        get_head_to_head_url() method in the HeadToHead class.
 
         Args:
-            tr (element.Tag): A BeautifulSoup Tag object representing a row in the game table.
+            tr (element.Tag): A BeautifulSoup Tag object representing a
+            row in the game table.
 
         Returns:
             Game: A fully populated Game object.
-
-        Raises:
-            RuntimeError: If the expected number of <td> elements is not found.
         """
         game = Game()
+
+        # The <tr> looks something like this:
+        #
+        # <tr>
+        #   <td> <a href="http://msa.uschess.org/XtblMain.php?202412219692"> ADULT AND YOUTH BEFORE CHRISTMAS24 </a> </td>
+        #   <td> ADULTS ONLY WEDNESDAY </td>
+        #   <td> 1 </td>
+        #   <td> B </td>
+        #   <td> <a href="./gamestats.php?memid=12910923&amp;ptype=0&amp;rs=R&amp;dkey=wk_memid&amp;drill=32197553"> 32197553 </a> </td>
+        #   <td> <a href="http://msa.uschess.org/MbrDtlMain.php?32197553"> GRAHAM RF NAPIER </a> </td>
+        #   <td> <nobr> 1074 =&gt; 1012 (R) </nobr> </td>
+        #   <td> W </td>
+        #   </tr>
 
         # Parse the <tr> for the game attributes
         tds = tr.find_all("td")
