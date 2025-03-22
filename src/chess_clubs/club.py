@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 from typing import Dict, Generator, Tuple
 
 from chess_clubs import get_active_player_list_url, get_club_name, get_main_table, get_page, parse_player
-from chess_clubs.head_to_head import HeadToHead
 from chess_clubs.player import Player
 
 class Club:
@@ -24,7 +23,6 @@ class Club:
         self.name: str = None
         self.url: str = f"https://www.uschess.org/msa/AffDtlMain.php?{self.id}"
         self.active_players_url: str = None
-        self.head_to_head_map: Dict[Tuple[str, str], HeadToHead] = {}
         
         # Fetch and parse the club's webpage to extract relevant information
         html = get_page(self.url)
@@ -55,30 +53,6 @@ class Club:
 
             player = parse_player(tr)
             yield player
-
-    def load_head_to_head(self):
-        """
-        Loads head-to-head statistics for all active players in the club.
-
-        This function iterates through all pairs of active players, retrieves
-        their head-to-head records, and stores the results in a dictionary.
-        """
-        players = [player for player in self.get_active_players()]
-        n = len(players)
-        for i in range(n-1):
-            player_id = players[i].id
-            print(f"{i}. {players[i].name}")
-            for j in range(i+1, n):
-                opponent_id = players[j].id
-                hth = HeadToHead(player_id, opponent_id)
-                hth.load()
-                
-                if not hth.games:
-                    self.head_to_head_map[(player_id, opponent_id)] = None
-                    self.head_to_head_map[(opponent_id, player_id)] = None
-                else:
-                    self.head_to_head_map[(player_id, opponent_id)] = hth
-                    self.head_to_head_map[(opponent_id, player_id)] = hth.invert()
         
     def __str__(self) -> str:
         """

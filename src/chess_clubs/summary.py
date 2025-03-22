@@ -3,13 +3,15 @@ from chess_clubs.game import Game
 class Summary:
     """
     Represents a summary of a player's game results, including wins, losses, draws,
-    and the computed percentage score.
+    and the computed percentage score against an opponent
     """
     
-    def __init__(self):
+    def __init__(self, player_id: str, opponent_id: str):
         """
         Initializes a Summary instance with zeroed statistics.
         """
+        self.pid: str = player_id
+        self.oid: str = opponent_id
         self._games: int = 0
         self._wins: int = 0
         self._losses: int = 0
@@ -21,6 +23,7 @@ class Summary:
         Inverts the summary by swapping wins and losses.
         Updates the percentage accordingly.
         """
+        self.pid, self.oid = self.oid, self.pid
         self.wins, self.losses = self.losses, self.wins
         self._update_pct()
     
@@ -32,6 +35,8 @@ class Summary:
             str: A formatted summary string containing games, wins, losses, draws, and percentage.
         """
         parts = [
+            f'pid="{self.pid}"',
+            f'oid="{self.oid}"',
             f'games="{self.games}"',
             f'wins="{self.wins}"',
             f'losses="{self.losses}"',

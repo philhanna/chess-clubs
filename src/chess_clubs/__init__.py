@@ -7,6 +7,7 @@ from chess_clubs.player import Player
 
 config = load_config()
 
+
 def get_active_player_list_url(main_table, MIN_GAMES=config.app.MIN_GAMES) -> str:
     """
     Constructs the URL for retrieving the active player list.
@@ -52,6 +53,39 @@ def get_club_name(main_table) -> str:
     id_part = id_part.strip()
     name_part = name_part.strip()
     return name_part
+
+
+def get_head_to_head_url(player_id: str, opponent_id: str) -> str:
+    """
+    Constructs the URL to retrieve head-to-head game results from USCF.
+
+    Args:
+        player_id (str): The unique identifier of the player.
+        opponent_id (str): The unique identifier of the opponent.
+
+    Returns:
+        str: The URL pointing to the head-to-head game statistics page.
+    """
+    url = (f"https://www.uschess.org/datapage/gamestats.php?memid={player_id}"
+           f"&ptype=0&rs=R&drill={opponent_id}")
+    return url
+
+
+def get_player_name(soup: BeautifulSoup) -> str:
+    """
+    Extracts the player's name from the head-to-head game page.
+
+    Args:
+        soup (BeautifulSoup): Parsed HTML content of the webpage.
+
+    Returns:
+        str: The player's name in text format.
+        None: If the player's name could not be found.
+    """
+    td = soup.find("td", string=lambda text: text and text.strip() == "Name")
+    if not td:
+        return None
+    return td.find_next_sibling("td").get_text(strip=True)
 
 
 def get_main_table(soup) -> element.Tag:
@@ -142,6 +176,20 @@ def invert_result(result: str) -> str:
     if result and result == "L":
         return "W"
     return result
+
+
+def is_game_row(tr: element.Tag) -> bool:
+    """
+    Determines whether a table row corresponds to a game entry.
+
+    Args:
+        tr (element.Tag): A table row from the parsed HTML.
+
+    Returns:
+        bool: True if the row contains game data, False otherwise.
+    """
+    text = tr.find("td").get_text(strip=True)
+    return not text.startswith("Search for")
 
 
 def parse_player(tr: element.Tag) -> Player:

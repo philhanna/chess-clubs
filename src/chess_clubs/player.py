@@ -60,7 +60,7 @@ class Player:
         Returns:
             str: A string in the format "Player(id:name)".
         """
-        return f"Player({self.id}:{self.name})"
+        return f"Player({self.id}:{self.name} {self.rating})"
 
     @property
     def id(self) -> str:

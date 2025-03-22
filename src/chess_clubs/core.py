@@ -1,6 +1,13 @@
+from datetime import datetime
 import os
 import sqlite3
+
+from bs4 import BeautifulSoup
+from chess_clubs import get_head_to_head_url, get_page, is_game_row
 from chess_clubs.club import Club, Player
+from chess_clubs.game import Game
+from chess_clubs.game_factory import GameFactory
+from chess_clubs.summary import Summary
 
 
 class Main():
@@ -36,11 +43,72 @@ class Main():
             self.add_club(con, club)
 
             # Insert active players associated with the club into the database
-            for player in club.get_active_players():
+            players = list(club.get_active_players())
+
+            for i in range(len(players)-1):
+                player = players[i]
+                current_time = datetime.now().strftime("%H:%M:%S")
+                print(f"LOG: {current_time} {str(player)}")
+
+                # Add this player to the Players table in the database
                 self.add_player(con, player)
+
+                # Do the head-to-head matchup between this player and
+                # all others
+                for j in range(1, len(players)):
+                    opponent = players[j]
+
+                    # Start tracking the summary for this pair
+                    summary = Summary(player.id, opponent.id)
+
+                    # Get the HTML of the head-to-head matchup page
+                    url = get_head_to_head_url(player.id, opponent.id)
+                    html = get_page(url)
+                    soup = BeautifulSoup(html, 'html.parser')
+
+                    # From the head-to-head page, retrieve all the games
+                    # played by this pair
+                    th = soup.find(
+                        "th", string=lambda text: text and "Event Name" in text)
+                    if th is not None:
+
+                        # Skip the headings row
+                        tr = th.find_parent("tr")
+
+                        # Process each game row
+                        while True:
+                            tr = tr.find_next_sibling("tr")
+                            if not tr or not is_game_row(tr):
+                                break
+
+                            # Parse the game and assign player details
+                            game = GameFactory.from_soup(tr)
+                            game.player_id = player.id
+                            game.player_name = player.name
+
+                            # Update the summary
+                            summary.update_with(game)
+
+                            # Store the game data
+                            self.add_game(con, game)
+
+                            # Invert the game and store that
+                            game.invert()
+                            self.add_game(con, game)
+
+                    # Write the summary to the database
+                    self.add_summary(con, summary)
+
+                    # Invert the summary and store that
+                    summary.invert()
+                    self.add_summary(con, summary)
 
         # Execution complete
         return
+
+    #   ========================================================
+    #   Database methods
+    #   ========================================================
 
     def add_club(self, con: sqlite3.Connection, club: Club):
         """ 
@@ -57,6 +125,35 @@ class Main():
         # Insert club details into database
         sql = """ INSERT INTO clubs (id, name, url) VALUES(?, ?, ?) """
         cur.execute(sql, (club.id, club.name, club.url))
+        con.commit()
+        return
+
+    def add_game(self, con: sqlite3.Connection, game: Game):
+        """
+        Adds this game to the database if it is not already there
+        """
+        cur = con.cursor()
+
+        # Check whether the game already exists in the database
+        sql = """ SELECT 1 FROM games WHERE pid == ? AND oid == ? """
+        cur.execute(sql, (game.player_id, game.opponent_id))
+        if cur.fetchone() is not None:
+            return
+
+        # Insert game details into the database
+        sql = """
+        
+        INSERT INTO games (pid, oid, tid, sname, rnumber, color, result)
+        VALUES(?, ?, ?, ?, ?, ?, ?)
+        
+"""
+        cur.execute(sql, (game.player_id,
+                          game.opponent_id,
+                          game.tid,
+                          game.sname,
+                          game.rnumber,
+                          game.color,
+                          game.result))
         con.commit()
         return
 
@@ -88,6 +185,24 @@ class Main():
                           player.last_event))
         con.commit()
         return
+
+    def add_summary(self, con: sqlite3.Connection, summary: Summary):
+        """
+        Adds the summary to the database if it is not already there
+        """
+        cur = con.cursor()
+
+        # Check whether the summary already exists in the database
+        sql = """ SELECT 1 from summaries WHERE pid=? AND oid=? """
+        cur.execute(sql, (summary.pid, summary.oid))
+        if cur.fetchone() is not None:
+            return
+
+        # Insert summary details into the database
+        sql = """
+        
+        INSERT INTO summaries (pid, oid, )
+        """
 
     def create_tables(self, con: sqlite3.Connection):
         """
@@ -140,7 +255,7 @@ class Main():
             club_id     TEXT,       -- Club ID 
             chief_td_id TEXT,       -- ID of chief tournament director
             n_sections  INT,        -- Number of sections
-            n_players   INT        -- Number of players
+            n_players   INT         -- Number of players
         );
         
         """
