@@ -12,7 +12,7 @@ requires-python = ">=3.8"
 dependencies = ["requests", "bs4"]
 
 [tool.setuptools]
-packages = ["chess_clubs", "clubs", "games", "players", "util"]
+packages = ["chess_clubs"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
