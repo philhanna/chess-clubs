@@ -45,13 +45,15 @@ class Main():
             # Insert active players associated with the club into the database
             players = list(club.get_active_players())
 
+            # First, add all the players to the database
+            for player in players:
+                self.add_player(con, player)
+
+            # Now do the head-to-head matchups
             for i in range(len(players)-1):
                 player = players[i]
                 current_time = datetime.now().strftime("%H:%M:%S")
                 print(f"LOG: {current_time} {str(player)}")
-
-                # Add this player to the Players table in the database
-                self.add_player(con, player)
 
                 # Do the head-to-head matchup between this player and
                 # all others
@@ -68,9 +70,14 @@ class Main():
 
                     # From the head-to-head page, retrieve all the games
                     # played by this pair
-                    th = soup.find(
-                        "th", string=lambda text: text and "Event Name" in text)
-                    if th is not None:
+                    th_found = False
+                    for th in soup.find_all("th"):
+                        text = th.get_text()
+                        if "Event Name" in text:
+                            th_found = True
+                            break
+                        
+                    if th_found:
 
                         # Skip the headings row
                         tr = th.find_parent("tr")
@@ -96,12 +103,12 @@ class Main():
                             game.invert()
                             self.add_game(con, game)
 
-                    # Write the summary to the database
-                    self.add_summary(con, summary)
-
-                    # Invert the summary and store that
-                    summary.invert()
-                    self.add_summary(con, summary)
+                    # If there were head-to-head games for this pair,
+                    # write summary records to the database.
+                    if summary.wins or summary.losses or summary.draws:
+                        self.add_summary(con, summary)
+                        summary.invert()
+                        self.add_summary(con, summary)
 
         # Execution complete
         return
@@ -201,8 +208,17 @@ class Main():
         # Insert summary details into the database
         sql = """
         
-        INSERT INTO summaries (pid, oid, )
+        INSERT INTO summaries (pid, oid, wins, losses, draws)
+        VALUES(?, ?, ?, ?, ?)
+        
         """
+        cur.execute(sql, (summary.pid,
+                          summary.oid,
+                          summary.wins,
+                          summary.losses,
+                          summary.draws))
+        con.commit()
+        return
 
     def create_tables(self, con: sqlite3.Connection):
         """

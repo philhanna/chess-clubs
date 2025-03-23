@@ -17,3 +17,8 @@ packages = ["chess_clubs"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "chess_clubs"]
+addopts = "-m 'not db and not mainline'"
+markers = [
+    "db: Marks tests that need a completed database",
+    "mainline: Marks tests that run the mainline"
+]
