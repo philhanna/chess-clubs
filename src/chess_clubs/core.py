@@ -2,12 +2,9 @@ from datetime import datetime
 import os
 import sqlite3
 
-from bs4 import BeautifulSoup
-from chess_clubs import get_head_to_head_url, get_page, is_game_row
 from chess_clubs.club import Club, Player
 from chess_clubs.game import Game
-from chess_clubs.game_factory import GameFactory
-from chess_clubs.summary import Summary
+from chess_clubs.head_to_head import HeadToHead
 
 
 class Main():
@@ -60,57 +57,19 @@ class Main():
                 for j in range(1, len(players)):
                     opponent = players[j]
 
-                    # Start tracking the summary for this pair
-                    summary = Summary(player.id, opponent.id)
-
-                    # Get the HTML of the head-to-head matchup page
-                    url = get_head_to_head_url(player.id, opponent.id)
-                    html = get_page(url)
-                    soup = BeautifulSoup(html, 'html.parser')
-
-                    # From the head-to-head page, retrieve all the games
-                    # played by this pair
-                    th_found = False
-                    for th in soup.find_all("th"):
-                        text = th.get_text()
-                        if "Event Name" in text:
-                            th_found = True
-                            break
+                    # Parse the head-to-head matchup page
+                    head_to_head = HeadToHead(player.id, opponent.id)
+                    for game in head_to_head.games:
                         
-                    if th_found:
+                        # Store the game and its inversion
+                        self.add_game(con, game)
+                        game.invert()
+                        self.add_game(con, game)
 
-                        # Skip the headings row
-                        tr = th.find_parent("tr")
-
-                        # Process each game row
-                        while True:
-                            tr = tr.find_next_sibling("tr")
-                            if not tr or not is_game_row(tr):
-                                break
-
-                            # Parse the game and assign player details
-                            game = GameFactory.from_soup(tr)
-                            game.player_id = player.id
-                            game.player_name = player.name
-
-                            # Update the summary
-                            summary.update_with(game)
-
-                            # Store the game data
-                            self.add_game(con, game)
-
-                            # Invert the game and store that
-                            game.invert()
-                            self.add_game(con, game)
-
-                    # If there were head-to-head games for this pair,
-                    # write summary records to the database.
-                    if summary.wins or summary.losses or summary.draws:
-                        self.add_summary(con, summary)
-                        summary.invert()
-                        self.add_summary(con, summary)
-
-        # Execution complete
+        # Create the summaries table from the games table
+        self.create_summaries(con)
+        
+        
         return
 
     #   ========================================================
@@ -137,15 +96,9 @@ class Main():
 
     def add_game(self, con: sqlite3.Connection, game: Game):
         """
-        Adds this game to the database if it is not already there
+        Adds this game to the database
         """
         cur = con.cursor()
-
-        # Check whether the game already exists in the database
-        sql = """ SELECT 1 FROM games WHERE pid == ? AND oid == ? """
-        cur.execute(sql, (game.player_id, game.opponent_id))
-        if cur.fetchone() is not None:
-            return
 
         # Insert game details into the database
         sql = """
@@ -153,7 +106,7 @@ class Main():
         INSERT INTO games (pid, oid, tid, sname, rnumber, color, result)
         VALUES(?, ?, ?, ?, ?, ?, ?)
         
-"""
+        """
         cur.execute(sql, (game.player_id,
                           game.opponent_id,
                           game.tid,
@@ -193,30 +146,25 @@ class Main():
         con.commit()
         return
 
-    def add_summary(self, con: sqlite3.Connection, summary: Summary):
+    def create_summaries(self, con:sqlite3.Connection):
         """
-        Adds the summary to the database if it is not already there
+        Creates the summaries table from the games table
         """
-        cur = con.cursor()
-
-        # Check whether the summary already exists in the database
-        sql = """ SELECT 1 from summaries WHERE pid=? AND oid=? """
-        cur.execute(sql, (summary.pid, summary.oid))
-        if cur.fetchone() is not None:
-            return
-
-        # Insert summary details into the database
         sql = """
         
         INSERT INTO summaries (pid, oid, wins, losses, draws)
-        VALUES(?, ?, ?, ?, ?)
+        SELECT
+            pid,
+            oid,
+            SUM(CASE WHEN result = 'W' THEN 1 ELSE 0 END) AS wins,
+            SUM(CASE WHEN result = 'L' THEN 1 ELSE 0 END) AS losses,
+            SUM(CASE WHEN result = 'D' THEN 1 ELSE 0 END) AS draws
+        FROM        games
+        GROUP BY    pid, oid;
         
         """
-        cur.execute(sql, (summary.pid,
-                          summary.oid,
-                          summary.wins,
-                          summary.losses,
-                          summary.draws))
+        cur = con.cursor()
+        cur.execute(sql)
         con.commit()
         return
 
@@ -234,14 +182,13 @@ class Main():
         );
 
         CREATE TABLE games (
-            pid         TEXT NOT NULL,  -- Unique ID of player 1
-            oid         TEXT NOT NULL,  -- Unique ID of player 2
+            pid         TEXT,       -- Player id
+            oid         TEXT,       -- Opponent id
             tid         TEXT,       -- Tournament ID
             sname       TEXT,       -- Section name
             rnumber     INT,        -- Round number
             color       TEXT,       -- Color played ("W" for White, "B" for Black)
-            result      TEXT,       -- Result ("W" for win, "L" for loss, "D" for draw)
-            PRIMARY KEY (pid, oid)                  
+            result      TEXT        -- Result ("W" for win, "L" for loss, "D" for draw)
         );
         
         CREATE TABLE players (

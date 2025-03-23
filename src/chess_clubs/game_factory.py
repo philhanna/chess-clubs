@@ -9,7 +9,7 @@ class GameFactory:
     Factory class responsible for creating Game objects from HTML table rows.
     """
 
-    def from_soup(tr: element.Tag) -> Game:
+    def from_soup(player_id: str, tr: element.Tag) -> Game:
         """
         Parses an HTML table row (<tr>) from a Game Statistics page in
         the USCF website and creates a Game object with extracted attributes.
@@ -25,6 +25,7 @@ class GameFactory:
             Game: A fully populated Game object.
         """
         game = Game()
+        game.player_id = player_id
 
         # The <tr> looks something like this:
         #

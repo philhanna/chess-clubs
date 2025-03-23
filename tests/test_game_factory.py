@@ -24,12 +24,14 @@ def test_from_soup_with_valid_row(mock_formatted_name_class):
     </tr>
     """
 
+    player_id = "12910923"
     soup = BeautifulSoup(html, "html.parser")
     tr = soup.find("tr")
 
-    game = GameFactory.from_soup(tr)
+    game = GameFactory.from_soup(player_id, tr)
 
     assert isinstance(game, Game)
+    assert game.player_id == player_id
     assert game.tname == "ADULT AND YOUTH BEFORE CHRISTMAS24"
     assert game.tid == "202412219692"
     assert game.tdate == "2024-12-21"
